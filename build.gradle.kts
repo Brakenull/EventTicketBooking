@@ -34,7 +34,8 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-validation-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
 	testImplementation("org.springframework.modulith:spring-modulith-starter-test")
-	testCompileOnly("org.projectlombok:lombok")
+    runtimeOnly("org.postgresql:postgresql")
+    testCompileOnly("org.projectlombok:lombok")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	testAnnotationProcessor("org.projectlombok:lombok")
 }
