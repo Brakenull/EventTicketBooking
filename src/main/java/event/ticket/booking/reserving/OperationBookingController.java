@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/admin/booking")
@@ -39,5 +40,11 @@ public class OperationBookingController {
     @GetMapping("/{id}")
     public ResponseEntity<Booking> getBookingDetail(@PathVariable Long id) {
         return ResponseEntity.ok(operationBookingService.getBookingDetail(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> updateBookingStatus(@PathVariable Long id, @RequestParam BookingStatus status) {
+        operationBookingService.updateBookingStatus(id, status);
+        return ResponseEntity.ok(Map.of("message", "Update booking status successfully"));
     }
 }

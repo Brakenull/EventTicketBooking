@@ -41,6 +41,13 @@ public class OperationBookingService {
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy đơn hàng: " + bookingId));
     }
 
+    @Transactional
+    public void updateBookingStatus(Long bookingId, BookingStatus status) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+        booking.setStatus(status);
+    }
+
     private static Specification<Booking> filterBookings(
             BookingStatus status,
             Long userId,
