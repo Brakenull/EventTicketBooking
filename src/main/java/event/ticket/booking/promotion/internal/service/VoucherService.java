@@ -32,6 +32,7 @@ public class VoucherService {
         Voucher voucher = new Voucher();
         voucher.setCode(dto.code());
         voucher.setDiscountValue(dto.discountValue());
+        voucher.setCurrentUsage(0);
         voucher.setMaxUsage(dto.maxUsage());
         voucher.setStartDate(dto.startDate());
         voucher.setExpirationDate(dto.expirationDate());
