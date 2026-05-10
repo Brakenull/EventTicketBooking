@@ -7,6 +7,7 @@ import event.ticket.booking.inventory.internal.repository.ConcertCacheRepository
 import event.ticket.booking.inventory.internal.repository.TicketCategoryRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.List;
 public class TicketCategoryService {
     private final TicketCategoryRepository ticketCategoryRepository;
     private final ConcertCacheRepository concertCacheRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     public List<TicketCategoryContract.UserRes> getAll() {
         return ticketCategoryRepository.findAll().stream()
@@ -36,7 +38,17 @@ public class TicketCategoryService {
         ticketCategory.setPrice(dto.price());
         ticketCategory.setTotalQuantity(dto.totalQuantity());
         ticketCategory.setAvailableQuantity(dto.totalQuantity());
-        ticketCategoryRepository.save(ticketCategory);
+        TicketCategory saved = ticketCategoryRepository.save(ticketCategory);
+
+        ConcertCache concertCache = concertCacheRepository.findById(saved.getConcertId())
+                .orElseThrow(() -> new RuntimeException("concert not found"));
+        TicketCategoryContract.CreatedEvent event = new TicketCategoryContract.CreatedEvent(
+                saved.getId(),
+                concertCache.getTitle(),
+                saved.getName(),
+                saved.getPrice()
+        );
+        eventPublisher.publishEvent(event);
     }
 
     public void update(Long id, TicketCategoryContract.UpdateReq dto) {
@@ -44,6 +56,12 @@ public class TicketCategoryService {
                 .orElseThrow(() -> new RuntimeException("TicketCategory not found"));
         ticketCategory.setPrice(dto.price());
         ticketCategory.setTotalQuantity(dto.totalQuantity());
+
+        TicketCategoryContract.UpdatedEvent event = new TicketCategoryContract.UpdatedEvent(
+                ticketCategory.getId(),
+                ticketCategory.getPrice()
+        );
+        eventPublisher.publishEvent(event);
     }
 
     private TicketCategoryContract.UserRes mapToDTO(TicketCategory ticketCategory) {

@@ -26,4 +26,16 @@ public interface TicketCategoryContract {
             BigDecimal price,
             Integer totalQuantity
     ) {}
+
+    record CreatedEvent(
+            Long id,
+            String concertTitle,
+            String name,
+            BigDecimal price
+    ) {}
+
+    record UpdatedEvent(
+            Long id,
+            BigDecimal price
+    ) {}
 }

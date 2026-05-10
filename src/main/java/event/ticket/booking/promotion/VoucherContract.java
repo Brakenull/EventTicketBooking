@@ -29,4 +29,18 @@ public interface VoucherContract {
             LocalDateTime startDate,
             LocalDateTime expirationDate
     ) {}
+
+    record CreatedEvent(
+            Long id,
+            String code,
+            BigDecimal discountValue,
+            LocalDateTime startDate,
+            LocalDateTime expirationDate
+    ) {}
+
+    record UpdatedEvent(
+            Long id,
+            LocalDateTime startDate,
+            LocalDateTime expirationDate
+    ) {}
 }

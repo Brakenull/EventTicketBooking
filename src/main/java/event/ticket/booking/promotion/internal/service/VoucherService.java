@@ -5,6 +5,7 @@ import event.ticket.booking.promotion.internal.entity.Voucher;
 import event.ticket.booking.promotion.internal.repository.VoucherRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
 @Transactional
 public class VoucherService {
     private final VoucherRepository voucherRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     public List<VoucherContract.Res> getAll() {
         return voucherRepository.findAll().stream()
@@ -33,7 +35,16 @@ public class VoucherService {
         voucher.setMaxUsage(dto.maxUsage());
         voucher.setStartDate(dto.startDate());
         voucher.setExpirationDate(dto.expirationDate());
-        voucherRepository.save(voucher);
+        Voucher saved = voucherRepository.save(voucher);
+
+        VoucherContract.CreatedEvent event = new VoucherContract.CreatedEvent(
+                saved.getId(),
+                saved.getCode(),
+                saved.getDiscountValue(),
+                saved.getStartDate(),
+                saved.getExpirationDate()
+        );
+        eventPublisher.publishEvent(event);
     }
 
     public void update(Long id, VoucherContract.UpdateReq dto) {
@@ -42,6 +53,13 @@ public class VoucherService {
         voucher.setMaxUsage(dto.maxUsage());
         voucher.setStartDate(dto.startDate());
         voucher.setExpirationDate(dto.expirationDate());
+
+        VoucherContract.UpdatedEvent event = new VoucherContract.UpdatedEvent(
+                voucher.getId(),
+                voucher.getStartDate(),
+                voucher.getExpirationDate()
+        );
+        eventPublisher.publishEvent(event);
     }
 
     private VoucherContract.Res mapToDTO(Voucher voucher) {
