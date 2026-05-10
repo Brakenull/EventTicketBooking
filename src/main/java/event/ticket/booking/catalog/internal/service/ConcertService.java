@@ -3,6 +3,7 @@ package event.ticket.booking.catalog.internal.service;
 import event.ticket.booking.catalog.ConcertContract;
 import event.ticket.booking.catalog.internal.entity.Concert;
 import event.ticket.booking.catalog.internal.repository.ConcertRepository;
+import event.ticket.booking.inventory.TicketCategoryApi;
 import event.ticket.booking.shared.consts.ConcertStatus;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.List;
 public class ConcertService {
     private final ConcertRepository concertRepository;
     private final ApplicationEventPublisher eventPublisher;
+    private final TicketCategoryApi ticketCategoryApi;
 
     public List<ConcertContract.Res> getAll() {
         return concertRepository.findAll().stream()
@@ -54,6 +56,9 @@ public class ConcertService {
         concert.setDescription(dto.description());
         concert.setLocation(dto.location());
         concert.setStartDate(dto.startDate());
+        if (dto.status() != concert.getStatus() && dto.status() == ConcertStatus.PUBLISHED) {
+            ticketCategoryApi.publishConcert(id);
+        }
         concert.setStatus(dto.status());
     }
 

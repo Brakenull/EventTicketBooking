@@ -8,6 +8,7 @@ import event.ticket.booking.inventory.internal.repository.TicketCategoryReposito
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class TicketCategoryService {
     private final TicketCategoryRepository ticketCategoryRepository;
     private final ConcertCacheRepository concertCacheRepository;
     private final ApplicationEventPublisher eventPublisher;
+    private final StringRedisTemplate redisTemplate;
 
     public List<TicketCategoryContract.UserRes> getAll() {
         return ticketCategoryRepository.findAll().stream()
@@ -57,6 +59,7 @@ public class TicketCategoryService {
         ticketCategory.setPrice(dto.price());
         ticketCategory.setTotalQuantity(dto.totalQuantity());
 
+        redisTemplate.opsForValue().set("ticket:price:" + id, dto.price().toString());
         TicketCategoryContract.UpdatedEvent event = new TicketCategoryContract.UpdatedEvent(
                 ticketCategory.getId(),
                 ticketCategory.getPrice()
