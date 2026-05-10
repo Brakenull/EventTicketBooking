@@ -1,5 +1,6 @@
 package event.ticket.booking.reserving.internal.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -18,5 +19,6 @@ public class BookingDetail {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "booking_id")
+    @JsonBackReference(value = "booking-details")
     private Booking booking;
 }

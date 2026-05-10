@@ -1,5 +1,6 @@
 package event.ticket.booking.reserving.internal.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import event.ticket.booking.shared.consts.BookingStatus;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -27,5 +28,6 @@ public class Booking {
     private String idempotencyKey;
 
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
+    @JsonManagedReference(value = "booking-details")
     private List<BookingDetail> details;
 }
