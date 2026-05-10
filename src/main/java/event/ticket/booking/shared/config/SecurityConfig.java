@@ -1,5 +1,6 @@
 package event.ticket.booking.shared.config;
 
+import event.ticket.booking.shared.consts.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,15 +30,16 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable) // Tắt CSRF vì sử dụng JWT
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Không lưu session
                 .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/api/auth/**").permitAll() // Mở khóa các API đăng nhập, đăng ký
-                                .requestMatchers("/api/**").permitAll() // Mở khóa các API đăng nhập, đăng ký
                                 .requestMatchers(
                                         "/swagger-ui/**",
                                         "/v3/api-docs/**",
                                         "/swagger-resources/**",
-                                        "/webjars/**"
+                                        "/webjars/**",
+                                        "/api/auth/**"
                                 ).permitAll()
-//                                .requestMatchers("/api/admin/**").hasRole(LoginRole.ADMIN.toString()) // Chỉ Admin mới vào được
+                                .requestMatchers("/api/admin/**").hasRole(UserRole.ADMIN.toString()) // Chỉ Admin mới vào được
+                                .requestMatchers("/api/operator/**").hasRole(UserRole.OPERATOR.toString()) // Chỉ Operator mới vào được
+                                .requestMatchers("/api/customer/**").hasRole(UserRole.CUSTOMER.toString()) // Chỉ Customer mới vào được
                                 .anyRequest().authenticated() // Các API khác cần phải có token hợp lệ
                 )
 //                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)

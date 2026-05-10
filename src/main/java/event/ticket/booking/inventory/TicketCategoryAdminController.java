@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/ticket/categories")
+@RequestMapping("/api/admin/ticket/categories")
 @RequiredArgsConstructor
-public class TicketCategoryController {
+public class TicketCategoryAdminController {
     private final TicketCategoryService ticketCategoryService;
 
     @GetMapping

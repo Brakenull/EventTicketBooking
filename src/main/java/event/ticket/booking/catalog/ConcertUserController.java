@@ -6,12 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
-@RequestMapping("/api/concerts")
+@RequestMapping("/api/customer/concerts")
 @RequiredArgsConstructor
-public class ConcertController {
+public class ConcertUserController {
     private final ConcertService concertService;
 
     @GetMapping
@@ -22,17 +21,5 @@ public class ConcertController {
     @GetMapping("/{id}")
     public ResponseEntity<ConcertContract.Res> getById(@PathVariable Long id) {
         return ResponseEntity.ok(concertService.getById(id));
-    }
-
-    @PostMapping
-    public ResponseEntity<Object> create(@RequestBody ConcertContract.CreateReq dto) {
-        concertService.create(dto);
-        return ResponseEntity.ok(Map.of("message", "Concert created successfully"));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Object> update(@PathVariable Long id, @RequestBody ConcertContract.UpdateReq dto) {
-        concertService.update(id, dto);
-        return ResponseEntity.ok(Map.of("message", "Concert updated successfully"));
     }
 }

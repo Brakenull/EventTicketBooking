@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/vouchers")
+@RequestMapping("/api/admin/vouchers")
 @RequiredArgsConstructor
-public class VoucherController {
+public class VoucherAdminController {
     private final VoucherService voucherService;
 
     @GetMapping

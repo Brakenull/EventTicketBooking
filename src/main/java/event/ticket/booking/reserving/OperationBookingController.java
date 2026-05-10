@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/admin/booking")
+@RequestMapping("/api/operator/booking")
 @RequiredArgsConstructor
 public class OperationBookingController {
 
